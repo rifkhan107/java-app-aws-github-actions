@@ -32,6 +32,6 @@ Follow the steps described in the <a href="https://rifkhan107.medium.com/deployi
   <li><code>src/</code>: Spring Boot application source code</li>
   <li><code>Dockerfile</code>: Docker configuration file for building the container image</li>
   <li><code>main.tf</code>: Terraform configuration file for provisioning AWS resources</li>
-  <li><code>.github/workflows/main.yml</code>: GitHub Actions workflow configuration for CI/CD</li>
+  <li><code>.github/workflows/ci-cd.yml</code>: GitHub Actions workflow configuration for CI/CD</li>
 </ul>
 
