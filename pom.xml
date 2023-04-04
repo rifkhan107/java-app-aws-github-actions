@@ -32,6 +32,22 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <to>
+                        <image>233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app:${{ github.sha }}</image>
+                    </to>
+                    <container>
+                        <mainClass>com.example.MySpringBootApplication</mainClass>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                    </container>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
