@@ -72,9 +72,11 @@ jobs:
         run: |
           aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
           mkdir -p k8s
-          cp k8s-deployment.yaml k8s/k8s-deployment.yaml
+          export ECR_REPOSITORY_URL="233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app"
+          envsubst < k8s-deployment.yaml > k8s/k8s-deployment.yaml
           echo "resources:" > k8s/kustomization.yaml
           echo "- k8s-deployment.yaml" >> k8s/kustomization.yaml
           kubectl kustomize k8s | kubectl apply -f -
+
 
 
