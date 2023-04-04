@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
       - name: my-spring-boot-app
-        image: ${aws_ecr_repository.this.repository_url}:latest
-
+        image: ${ECR_REPOSITORY_URL}:latest
         ports:
         - containerPort: 8080
           name: http
