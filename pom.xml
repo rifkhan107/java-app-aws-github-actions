@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.5</version>
+        <version>3.0.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
@@ -32,23 +32,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <to>
-                        <image>233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app:${project.version}</image>
-                    </to>
-                    <from>
-                        <image>adoptopenjdk:openj9-focal</image>
-                    </from>
-                    <container>
-                        <jvmFlags>
-                            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
-                            <jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
-                        </jvmFlags>
-                    </container>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
