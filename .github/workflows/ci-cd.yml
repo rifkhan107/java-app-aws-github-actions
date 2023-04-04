@@ -72,6 +72,9 @@ jobs:
         run: |
           aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
           mkdir -p k8s
-          cp k8s-deployment.yaml k8s/kustomization.yaml
+          cp k8s-deployment.yaml k8s/k8s-deployment.yaml
+          echo "resources:" > k8s/kustomization.yaml
+          echo "- k8s-deployment.yaml" >> k8s/kustomization.yaml
           kubectl kustomize k8s | kubectl apply -f -
+
 
