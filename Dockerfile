@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the compiled JAR file (built using `./mvnw clean package`) into the container
-COPY target/*.jar app.jar
+COPY target/my-spring-boot-app.jar app.jar
 
 # Set the entry point for the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
