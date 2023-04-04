@@ -68,6 +68,15 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region us-west-2
 
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password | docker login --username AWS --password-stdin 233873070253.dkr.ecr.us-west-2.amazonaws.com
+
+      - name: Push Docker image
+        run: |
+          docker tag 233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app:latest 233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app:latest
+          docker push 233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app:latest
+
       - name: Deploy to EKS
         run: |
           aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
@@ -76,7 +85,7 @@ jobs:
           envsubst < k8s-deployment.yaml > k8s/k8s-deployment.yaml
           echo "resources:" > k8s/kustomization.yaml
           echo "- k8s-deployment.yaml" >> k8s/kustomization.yaml
-          kubectl kustomize k8s | kubectl apply -f - --force
+          kubectl kustomize k8 | kubectl apply -f - --force
 
 
 
