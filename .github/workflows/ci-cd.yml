@@ -76,7 +76,8 @@ jobs:
           envsubst < k8s-deployment.yaml > k8s/k8s-deployment.yaml
           echo "resources:" > k8s/kustomization.yaml
           echo "- k8s-deployment.yaml" >> k8s/kustomization.yaml
-          kubectl kustomize k8s | kubectl apply -f -
+          kubectl kustomize k8s | kubectl apply -f - --force
+
 
 
 
