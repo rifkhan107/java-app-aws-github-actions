@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-spring-boot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-spring-boot-app
+  template:
+    metadata:
+      labels:
+        app: my-spring-boot-app
+    spec:
+      containers:
+      - name: my-spring-boot-app
+        image: ${aws_ecr_repository.this.repository_url}:latest
+
+        ports:
+        - containerPort: 8080
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-spring-boot-app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: my-spring-boot-app

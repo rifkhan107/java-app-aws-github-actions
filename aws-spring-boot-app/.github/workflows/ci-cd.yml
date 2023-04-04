@@ -1,0 +1,70 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: 11
+        distribution: 'adopt'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build and test with Maven
+      run: mvn --batch-mode --update-snapshots --no-transfer-progress clean test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: 11
+        distribution: 'adopt'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build Docker image
+      run: mvn --batch-mode --update-snapshots --no-transfer-progress clean package jib:build -Djib.to.image=233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app
+
+    - name: Install and configure AWS CLI
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws configure set default.region us-west-2
+
+    - name: Deploy to EKS
+      run: |
+        aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
+        envsubst < k8s/kustomization.tmpl.yaml > k8s/kustomization.yaml
+        kubectl kustomize k8s | kubectl apply -f -
