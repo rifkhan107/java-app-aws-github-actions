@@ -27,7 +27,13 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Build and test with Maven
-      run: mvn --batch-mode --update-snapshots --no-transfer-progress clean test
+      run: mvn --batch-mode --update-snapshots --no-transfer-progress clean package
+
+    - name: Upload JAR file
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-jar
+        path: target/*.jar
       
   deploy:
     needs: build
@@ -44,8 +50,14 @@ jobs:
           java-version: 17
           distribution: 'adopt'
 
+      - name: Download JAR file
+        uses: actions/download-artifact@v2
+        with:
+          name: app-jar
+          path: target
+
       - name: Build Docker image
-        run: docker build -t 233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app -f Dockerfile .
+        run: docker build -t 233873070253.dkr.ecr.us-west-2.amazonaws.com/my-spring-boot-app .
 
       - name: Install and configure AWS CLI
         run: |
