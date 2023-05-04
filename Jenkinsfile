@@ -54,12 +54,27 @@ pipeline {
             }
         }
 
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Set the version number for the Docker image
+                    def version = "v1.0.${env.BUILD_NUMBER}-${env.BUILD_TIMESTAMP}"
+
+                    // Login to Azure Container Registry
+                    sh "az acr login --name dev98"
+
+                    // Push the Docker image to Azure Container Registry
+                    sh "docker push crodmsdevd6a2.azurecr.io/om-be:${version}"
+                }
+            }
+        }
+
         stage('Deploy to AKS') {
             steps {
                 script {
                     // Set the version number and date for the Docker image
                     def version = "v1.0.${env.BUILD_NUMBER}-${env.BUILD_TIMESTAMP}"
-                    def ACR_REGISTRY = 'crodmsdevd6a2.azurecr.io'
+                    def ACR_REGISTRY = 'dev98.azurecr.io'
                     def DOCKER_IMAGE = 'om-be'
 
                     // Replace the image in the manifest file with the new image from ACR

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: om-be-deployment
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: om-be
+  template:
+    metadata:
+      labels:
+        app: om-be
+    spec:
+      containers:
+      - name: om-be-container
+        image: crodmsdevd6a2.azurecr.io/om-be:v1.0.4
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "dev"
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: om-be-secrets
+              key: DB_PASSWORD
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: om-be-secrets
+              key: KEYCLOAK_ADMIN_PASSWORD
+      imagePullSecrets:
+      - name: acr-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: om-be-service
+  namespace: dev
+  # annotations:
+  #   # service.beta.kubernetes.io/azure-load-balancer-resource-group: "rg-INDG-LKA-NawaNiwasa-QAS-001"
+  #   # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  selector:
+    app: om-be
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+  # loadBalancerIP: 20.212.94.239
