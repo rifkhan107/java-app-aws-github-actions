@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout your source code from the repository
-                git url: 'https://github.com/your/repository.git'
+                git url: 'https://github.com/rifkhan107/java-app-aws-github-actions.git'
             }
         }
 
