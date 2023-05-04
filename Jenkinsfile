@@ -6,12 +6,12 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout your source code from the repository
-                git url: 'https://github.com/rifkhan107/java-app-aws-github-actions.git'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         // Checkout your source code from the repository
+        //         git url: 'https://github.com/rifkhan107/java-app-aws-github-actions.git'
+        //     }
+        // }
 
         stage('Build') {
             steps {
