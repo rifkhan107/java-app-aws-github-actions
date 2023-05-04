@@ -1,9 +1,8 @@
 pipeline {
     agent any
     
-    options {
-        timestamps()
-        buildTimestamp(format: "yyyyMMdd")
+    environment {
+        CURRENT_DATE = sh(script: 'date "+%Y%m%d"', returnStdout: true).trim()
     }
 
     stages {
@@ -29,7 +28,7 @@ pipeline {
             steps {
                 script {
                     // Set the version number and date for the Docker image
-                    def version = "v1.0.${env.BUILD_NUMBER}-${env.BUILD_TIMESTAMP}"
+                    def version = "v1.0.${env.BUILD_NUMBER}-${env.CURRENT_DATE}"
 
                     // Build the Docker image
                     sh "docker build -t om-be:${version} ."
@@ -44,7 +43,7 @@ pipeline {
             steps {
                 script {
                     // Set the version number for the Docker image
-                    def version = "v1.0.${env.BUILD_NUMBER}-${env.BUILD_TIMESTAMP}"
+                    def version = "v1.0.${env.BUILD_NUMBER}-${env.CURRENT_DATE}"
 
                     // Login to Azure Container Registry
                     sh "az acr login --name dev98"
@@ -59,7 +58,7 @@ pipeline {
             steps {
                 script {
                     // Set the version number and date for the Docker image
-                    def version = "v1.0.${env.BUILD_NUMBER}-${env.BUILD_TIMESTAMP}"
+                    def version = "v1.0.${env.BUILD_NUMBER}-${env.CURRENT_DATE}"
                     def ACR_REGISTRY = 'dev98.azurecr.io'
                     def DOCKER_IMAGE = 'om-be'
 
