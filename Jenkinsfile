@@ -24,20 +24,6 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Set the version number for the Docker image
-                    def version = "v1.0.${env.BUILD_NUMBER}"
-
-                    // Build the Docker image
-                    sh "docker build -t om-be:${version} ."
-
-                    // Tag the Docker image for the Azure Container Registry
-                    sh "docker tag om-be:${version} crodmsdevd6a2.azurecr.io/om-be:${version}"
-                }
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
@@ -49,7 +35,7 @@ pipeline {
                     sh "docker build -t om-be:${version} ."
 
                     // Tag the Docker image for the Azure Container Registry
-                    sh "docker tag om-be:${version} crodmsdevd6a2.azurecr.io/om-be:${version}"
+                    sh "docker tag om-be:${version} dev98.azurecr.io/om-be:${version}"
                 }
             }
         }
@@ -64,7 +50,7 @@ pipeline {
                     sh "az acr login --name dev98"
 
                     // Push the Docker image to Azure Container Registry
-                    sh "docker push crodmsdevd6a2.azurecr.io/om-be:${version}"
+                    sh "docker push dev98.azurecr.io/om-be:${version}"
                 }
             }
         }
